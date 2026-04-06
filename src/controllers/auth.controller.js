@@ -27,7 +27,8 @@ const loginRules = [
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, password, role } = req.body;
+    const email = req.body.email?.toLowerCase().trim();
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(409).json({ success: false, message: 'Email already in use.' });
@@ -47,7 +48,8 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = req.body.email?.toLowerCase().trim();
 
     const user = await User.findOne({ email }).select('+password');
     if (!user || !(await user.comparePassword(password))) {
@@ -57,6 +59,8 @@ const login = async (req, res) => {
     if (!user.isActive) {
       return res.status(403).json({ success: false, message: 'Account is deactivated.' });
     }
+
+    const token = signToken(user._id);
 
     return res.status(200).json({ 
       success: true, 
