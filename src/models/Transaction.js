@@ -39,8 +39,8 @@ const transactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// filter out soft-deleted docs on every find query automatically
-transactionSchema.pre(/^find/, function (next) {
+// auto-filter out deleted records for find, count, and lookup queries
+transactionSchema.pre(/^find|^count/, function (next) {
   this.where({ isDeleted: false });
   next();
 });

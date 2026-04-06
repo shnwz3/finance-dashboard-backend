@@ -4,7 +4,7 @@ const User = require('../models/User');
 const protect = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
     return res.status(401).json({ success: false, message: 'Authentication required. Provide a Bearer token.' });
   }
 

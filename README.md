@@ -138,12 +138,12 @@ finance-backend/
 │   ├── config/
 │   │   └── db.js                # MongoDB connection
 │   ├── models/
-│   │   ├── User.js              # User schema + bcrypt hooks
+│   │   ├── User.js              # User schema
 │   │   └── Transaction.js       # Transaction schema + soft delete hook
 │   ├── middleware/
 │   │   ├── auth.js              # JWT verification
 │   │   ├── rbac.js              # Role-based access guard
-│   │   └── validate.js          # express-validator error handler
+│   │   └── validate.js          # validation error handler
 │   ├── controllers/
 │   │   ├── auth.controller.js   # Register, login, me
 │   │   ├── user.controller.js   # Admin user management
@@ -154,9 +154,7 @@ finance-backend/
 │   │   ├── transaction.routes.js
 │   │   └── dashboard.routes.js
 │   ├── services/
-│   │   └── dashboard.service.js # Aggregation pipeline logic
-│   ├── utils/
-│   │   └── apiResponse.js       # Standardised response helpers
+│   │   └── dashboard.service.js # Aggregation logic
 │   └── scripts/
 │       └── seed.js              # Database seeder
 ├── .env.example
@@ -202,12 +200,9 @@ Status codes used:
 
 | Decision | Reasoning |
 |---|---|
-| Role is settable at registration | Makes testing easier. In production, only admins should assign roles. |
-| Soft delete on transactions | `isDeleted: true` preserves audit trail. A pre-find hook automatically excludes deleted records. |
-| Stateless JWT auth | No refresh tokens or blacklist — simple for this scope. Tokens expire after 7 days. |
-| Aggregation pipelines for dashboard | All summary calculations happen in MongoDB. Efficient for this data volume. |
-| Analyst role is read-only | The assignment says analysts "may" read and access insights. Interpreted conservatively. |
-| No rate limiting | Out of scope for this submission but would use `express-rate-limit` in production. |
+| Role is settable at registration | Makes testing easier. |
+| Rate limiting is active | 100 requests per 15 minutes per IP level. |
+| Analyst role is read-only | Based on requirements, Analyst focuses on insights. |
 
 ---
 

@@ -21,7 +21,7 @@ const getTransactions = async (req, res) => {
     const filter = {};
     if (type) filter.type = type;
     if (category) filter.category = new RegExp(category, 'i');
-    
+
     if (search) {
       filter.$or = [
         { category: new RegExp(search, 'i') },
@@ -45,8 +45,8 @@ const getTransactions = async (req, res) => {
       Transaction.countDocuments(filter),
     ]);
 
-    return res.status(200).json({ 
-      success: true, 
+    return res.status(200).json({
+      success: true,
       data: {
         transactions: txns,
         pagination: {
@@ -55,7 +55,7 @@ const getTransactions = async (req, res) => {
           limit: Number(limit),
           pages: Math.ceil(total / limit),
         },
-      } 
+      }
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Failed to fetch transactions.' });
@@ -114,7 +114,7 @@ const deleteTransaction = async (req, res) => {
       { new: true }
     );
     if (!tx) return res.status(404).json({ success: false, message: 'Transaction not found' });
-    return res.status(200).json({ success: true, message: 'Transaction deleted (soft)' });
+    return res.status(200).json({ success: true, message: 'Transaction deleted' });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Delete failed.' });
   }
